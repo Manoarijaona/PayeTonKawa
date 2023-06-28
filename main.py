@@ -2,12 +2,13 @@ from kivy.lang import Builder
 from kivymd.app import MDApp
 from kivy.uix.boxlayout import BoxLayout
 from kivy.lang import Builder
+from kivymd.uix.list import TwoLineIconListItem, IconLeftWidget
 from pyzbar.pyzbar import ZBarSymbol
 from kivymd.uix.snackbar import Snackbar
 from kivy_garden.zbarcam import ZBarCam
 from kivymd.uix.button import MDFlatButton
 
-from request import get_token_from_api_with_qrcode, token_decode
+from request import get_token_from_api_with_qrcode, token_decode, get_all_product
 
 
 class MainLayout(BoxLayout):
@@ -45,6 +46,7 @@ class MainApp(MDApp):
             self.cam = None  # met l'objet cam à None
         self.layout.clear_widgets()
         self.qr_code_screen = None
+        self.update_product_list()
         self.layout.add_widget(self.home_screen)
 
     def go_home(self):
@@ -59,6 +61,15 @@ class MainApp(MDApp):
                     self.stop_qrcode()
                 else:
                     print("wrong token")
+
+    def update_product_list(self):
+        product_list = self.home_screen.ids['product_list']
+        product_list.clear_widgets()
+
+        for product in get_all_product():
+            item = TwoLineIconListItem(text=product.name, secondary_text=f"Prix : {product.price}€")
+            item.add_widget(IconLeftWidget(icon="shopping"))
+            product_list.add_widget(item)
 
 
 MainApp().run()
