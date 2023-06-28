@@ -7,7 +7,7 @@ from kivymd.uix.snackbar import Snackbar
 from kivy_garden.zbarcam import ZBarCam
 from kivymd.uix.button import MDFlatButton
 
-from request import get_token_from_api_with_passphrase, token_decode
+from request import get_token_from_api_with_qrcode, token_decode
 
 
 class MainLayout(BoxLayout):
@@ -16,6 +16,7 @@ class MainLayout(BoxLayout):
 
 class MainApp(MDApp):
     def build(self):
+        self.cam = None  # ajoutez cette ligne
         self.theme_cls.primary_palette = "Teal"
         self.theme_cls.theme_style = "Light"
         self.layout = MainLayout()
@@ -39,8 +40,10 @@ class MainApp(MDApp):
         self.layout.add_widget(self.back_button)
 
     def stop_qrcode(self):
+        if self.cam:  # vérifie si l'objet cam existe
+            self.cam.play = False  # arrête la caméra
+            self.cam = None  # met l'objet cam à None
         self.layout.clear_widgets()
-        self.cam.play = False
         self.qr_code_screen = None
         self.layout.add_widget(self.home_screen)
 
@@ -51,7 +54,7 @@ class MainApp(MDApp):
     def on_symbols(self, instance, symbols):
         if symbols:
             for symbol in symbols:
-                token = get_token_from_api_with_passphrase(symbol.data.decode())
+                token = get_token_from_api_with_qrcode(symbol.data.decode())
                 if (token is not False):
                     self.stop_qrcode()
                 else:

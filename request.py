@@ -1,10 +1,21 @@
+import os
+from datetime import datetime
+from uuid import UUID
+
 import requests
 import json
 import base64
 
+from dotenv import load_dotenv
 
-def get_token_from_api_with_passphrase(passphrase: str):
-    url = 'http://54.38.241.241:9090/users/login-qrcode'
+from dto.product_dto import ProductDTO
+
+load_dotenv()
+API_URL = os.getenv('API_URL')
+
+
+def get_token_from_api_with_qrcode(passphrase: str):
+    url = f'{API_URL}/users/login-qrcode'
     payload = {
         'passphrase': passphrase
     }
@@ -29,11 +40,26 @@ def token_decode(token: str):
 
 
 def get_all_product():
-    url = 'http://54.38.241.241:9090/products'
+    url = f'{API_URL}/products'
     headers = {'Content-Type': 'application/json'}
     response = requests.get(url, headers=headers)
+
+    products_dto = []
+
     for product in response.json():
-        print(product)
+        product_dto = ProductDTO(
+            id=UUID(product['id']),
+            name=product['name'],
+            description=product['description'],
+            price=product['price'],
+            stock=product['stock'],
+            createdAt=datetime.strptime(product['createdAt'], '%Y-%m-%dT%H:%M:%S.%fZ'),
+            updatedAt=datetime.strptime(product['updatedAt'], '%Y-%m-%dT%H:%M:%S.%fZ'),
+            photo=product['photo']
+        )
+        products_dto.append(product_dto)
+
+    return products_dto
 
 
 get_all_product()
