@@ -1,0 +1,22 @@
+#:kivy 2.0.0
+Screen:
+    MDCard:
+        size_hint: 0.9, 0.9
+        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+        elevation: 1
+        padding: dp(25)
+        spacing: dp(25)
+        orientation: 'vertical'
+
+        Image:
+            source: 'media/kawa.png'
+            size: self.texture_size
+            size_hint_y: None
+            height: root.height * 0.9
+
+        MDFillRoundFlatButton:
+            text: 'QrCode'
+            icon_right: 'qrcode'
+            pos_hint: {'center_x': 0.5}
+            size_hint_x: 0.5
+            on_release: app.scan_qrcode()

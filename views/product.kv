@@ -1,0 +1,82 @@
+#:kivy 2.0.0
+Screen:
+
+    MDBoxLayout:
+        orientation: "vertical"
+
+        MDTopAppBar:
+            title: "DELONGHI Magnifica"
+            left_action_items: [["arrow-left", lambda x: app.callback(x)]]
+            right_action_items: [["cart", lambda x: app.callback(x)]]
+
+        ScrollView:
+            MDBoxLayout:
+                orientation: "vertical"
+                spacing: "10dp"
+                padding: "10dp"
+
+                Image:
+                    source: 'media/delonghi.png'
+                    size_hint: 1, None
+                    height: "150dp"
+
+                MDLabel:
+                    text: "Expresso Broyeur DELONGHI Magnifica"
+                    font_style: "H5"
+                    size_hint: 1, None
+                    height: self.texture_size[1]
+
+                MDLabel:
+                    text: "Prix : 299€"
+                    font_style: "Subtitle1"
+                    size_hint: 1, None
+                    height: self.texture_size[1]
+
+                MDLabel:
+                    text: "Les points clés"
+                    font_style: "H6"
+                    size_hint: 1, None
+                    height: self.texture_size[1]
+
+                MDLabel:
+                    text: "- Expresso broyeur avec fonction start"
+                    font_style: "Body1"
+                    size_hint: 1, None
+                    height: self.texture_size[1]
+
+                MDLabel:
+                    text: "- Filtre à eau Claris Smart"
+                    font_style: "Body1"
+                    size_hint: 1, None
+                    height: self.texture_size[1]
+
+                MDLabel:
+                    text: "- Broyeur silencieux intégré"
+                    font_style: "Body1"
+                    size_hint: 1, None
+                    height: self.texture_size[1]
+        Widget:
+            size_hint_y: None
+            height: "20dp"            
+        MDFillRoundFlatButton:
+            text: "Ajouter au panier"
+            icon: "cart-plus"
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            size_hint_x: None
+            width: 200
+            on_release: app.logger()
+
+        Widget:
+            size_hint_y: None
+            height: "10dp"  
+
+        MDFillRoundFlatButton:
+            text: "3D"
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            size_hint_x: None
+            width: 200
+            on_release: app.logger()
+
+        Widget:
+            size_hint_y: None
+            height: "20dp"  

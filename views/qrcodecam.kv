@@ -1,0 +1,8 @@
+#:import ZBarCam kivy_garden.zbarcam.ZBarCam
+#:import ZBarSymbol pyzbar.pyzbar.ZBarSymbol
+MDBoxLayout:
+	orientation:'vertical'
+	ZBarCam:
+		id:zbarcam
+		code_types:ZBarSymbol.QRCODE.value,ZBarSymbol.EAN13.value
+		on_symbols:app.on_symbols(*args)

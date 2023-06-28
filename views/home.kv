@@ -1,0 +1,46 @@
+#:kivy 2.0.0
+Screen:
+
+    MDBoxLayout:
+        orientation: "vertical"
+
+        MDTopAppBar:
+            title: "      Liste des produits"
+            left_action_items: [["account-plus", lambda x: app.callback(x)]]
+            right_action_items: [["cart", lambda x: app.callback(x)]]      
+        ScrollView:
+            MDList:
+                TwoLineIconListItem:
+                    text: "DELONGHI Magnifica"
+                    secondary_text: "Prix : 299€"
+                    IconLeftWidget:
+                        icon: "shopping"
+
+                TwoLineIconListItem:
+                    text: "Nespresso KRUPS "
+                    secondary_text: "Prix : 119€"
+                    IconLeftWidget:
+                        icon: "shopping"
+
+                TwoLineIconListItem:
+                    text: "PHILIPS omnia"
+                    secondary_text: "Prix : 499€"
+                    IconLeftWidget:
+                        icon: "shopping"
+                TwoLineIconListItem:
+                    text: "Nespresso Vertuo MAGIMIX Vertuo"
+                    secondary_text: "Prix : 79€"
+                    IconLeftWidget:
+                        icon: "shopping"
+
+                TwoLineIconListItem:
+                    text: "JURA E8 Moonlight"
+                    secondary_text: "Prix : 1299€"
+                    IconLeftWidget:
+                        icon: "shopping"
+
+                TwoLineIconListItem:
+                    text: "SAGE APPLIANCES Barista Express "
+                    secondary_text: "Prix : 487€"
+                    IconLeftWidget:
+                        icon: "shopping"        
