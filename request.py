@@ -61,5 +61,3 @@ def get_all_product():
 
     return products_dto
 
-
-get_all_product()
