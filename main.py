@@ -10,6 +10,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.lang import Builder
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.card import MDCard
+from kivymd.uix.dialog import MDDialog
 from kivymd.uix.label import MDLabel
 from kivymd.uix.list import TwoLineIconListItem, IconLeftWidget
 from kivymd.uix.toolbar import MDTopAppBar
@@ -99,7 +100,15 @@ class MainApp(MDApp):
                 if (token is not False):
                     self.stop_qrcode()
                 else:
-                    print("wrong token")
+                    self.show_invalid_qr_dialog()
+
+    def show_invalid_qr_dialog(self):
+        dialog = MDDialog(title='QR Code invalide',
+                          text="Le QR Code scanné n'est pas valable.",
+                          size_hint=(0.8, 0.3),
+                          buttons=[MDFlatButton(text='FERMER',
+                                        on_release=lambda x: dialog.dismiss())])
+        dialog.open()
 
     def update_product_list(self):
         product_list = self.home_screen.ids['product_list']
