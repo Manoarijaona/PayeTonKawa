@@ -1,8 +1,10 @@
 #:kivy 2.0.0
-Screen:
+#:import Window kivy.core.window.Window
 
+Screen:
     MDBoxLayout:
         orientation: "vertical"
+        size: Window.size
 
         MDTopAppBar:
             title: "      Liste des produits"
@@ -10,5 +12,9 @@ Screen:
             right_action_items: [["cart", lambda x: app.callback(x)]]
 
         ScrollView:
+            size_hint: (1, 1)
+
             MDList:
                 id: product_list
+                size_hint_y: None
+                height: self.minimum_height  # this will automatically set the height of the list

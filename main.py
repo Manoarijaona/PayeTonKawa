@@ -75,7 +75,12 @@ class MainApp(MDApp):
             item.add_widget(IconLeftWidget(icon="shopping"))
             product_list.add_widget(item)
 
-            item.bind(on_release=lambda x: self.show_product_details(product))
+            # Here we create a new function that returns the correct callback for each product
+            def create_callback(product):
+                return lambda x: self.show_product_details(product)
+
+            # And we bind this newly created callback to the on_release event
+            item.bind(on_release=create_callback(product))
 
     def show_product_details(self, product):
         detail_screen = ProductDetailScreen(product=product)
@@ -101,7 +106,7 @@ class ProductDetailScreen(BoxLayout):
         product_card = MDCard(orientation='vertical',
                               padding='8dp',
                               size_hint=(None, None),
-                              size=("280dp", "280dp"),   # Size is a tuple (width, height)
+                              size=("300dp", "530dp"),
                               pos_hint={"center_x": .5})
 
         # Add an image
