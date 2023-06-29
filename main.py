@@ -1,7 +1,10 @@
 import token
 
+from kivy.core.window import Window
 from kivy.lang import Builder
 from kivy.uix.image import AsyncImage
+from kivy.uix.label import Label
+from kivy.uix.popup import Popup
 from kivymd.app import MDApp
 from kivy.uix.boxlayout import BoxLayout
 from kivy.lang import Builder
@@ -24,15 +27,44 @@ class MainLayout(BoxLayout):
 
 class MainApp(MDApp):
     def build(self):
+        Window.size = (300, 500)  # Remplacer par la taille souhaitée
+        Window.borderless = False
+        Window.resizable = False  # Désactive le redimensionnement
         self.cam = None  # ajoutez cette ligne
         self.theme_cls.primary_palette = "Teal"
         self.theme_cls.theme_style = "Light"
         self.layout = MainLayout()
         self.login_screen = Builder.load_file('views/login.kv')
         self.home_screen = Builder.load_file('views/home.kv')
+        self.cart_screen = Builder.load_file('views/cart.kv')
         self.layout.add_widget(self.login_screen)
-
+        self.cart = []
         return self.layout
+
+    def place_order(self):
+
+        popup = Popup(title='Commande passée',
+                      content=Label(text='Votre commande a été passée avec succès!'),
+                      size_hint=(None, None), size=(250, 250))
+        popup.open()
+    def add_to_cart(self, product):
+        self.cart.append(product)
+        add_to_cart("c95a6a66-c9c6-4f79-b30b-dbac376793d8", product.id, 1)
+
+    def show_cart(self):
+        self.layout.clear_widgets()
+        self.cart_screen = Builder.load_file('views/cart.kv')
+        self.update_cart_list()
+        self.layout.add_widget(self.cart_screen)
+
+    def update_cart_list(self):
+        cart_list = self.cart_screen.ids['cart_list']
+        cart_list.clear_widgets()
+
+        for product in self.cart:
+            item = TwoLineIconListItem(text=product.name, secondary_text=f"Prix : {product.price}€")
+            item.add_widget(IconLeftWidget(icon="shopping"))
+            cart_list.add_widget(item)
 
     def go_back(self, instance):
         self.layout.clear_widgets()
@@ -48,9 +80,9 @@ class MainApp(MDApp):
         self.layout.add_widget(self.back_button)
 
     def stop_qrcode(self):
-        if self.cam:  # vérifie si l'objet cam existe
-            self.cam.play = False  # arrête la caméra
-            self.cam = None  # met l'objet cam à None
+        if self.cam:
+            self.cam.play = False
+            self.cam = None
         self.layout.clear_widgets()
         self.qr_code_screen = None
         self.update_product_list()
@@ -78,15 +110,26 @@ class MainApp(MDApp):
             item.add_widget(IconLeftWidget(icon="shopping"))
             product_list.add_widget(item)
 
-            # Here we create a new function that returns the correct callback for each product
+
             def create_callback(product):
                 return lambda x: self.show_product_details(product)
 
-            # And we bind this newly created callback to the on_release event
+
             item.bind(on_release=create_callback(product))
 
     def show_product_details(self, product):
         detail_screen = ProductDetailScreen(product=product)
+
+
+        add_to_cart_button = MDFillRoundFlatButton(
+            text="Ajouter au panier",
+            pos_hint={'center_x': 0.5},
+            on_release=lambda x: self.add_to_cart(product),
+            md_bg_color=MDApp.get_running_app().theme_cls.primary_color,
+            text_color=MDApp.get_running_app().theme_cls.primary_light
+        )
+
+        detail_screen.add_widget(add_to_cart_button)
 
         self.layout.clear_widgets()
         self.layout.add_widget(detail_screen)
@@ -110,7 +153,7 @@ class ProductDetailScreen(BoxLayout):
         product_card = MDCard(orientation='vertical',
                               padding='8dp',
                               size_hint=(None, None),
-                              size=("350dp", "450dp"),
+                              size=("250dp", "350dp"),
                               pos_hint={"center_x": .5})
 
         product_image = AsyncImage(source=product.photo, size_hint=(1, 1))
@@ -131,14 +174,8 @@ class ProductDetailScreen(BoxLayout):
         )
 
         self.add_widget(back_button)
-        add_to_cart_button = MDFillRoundFlatButton(
-            text="Ajouter au panier",
-            pos_hint={'center_x': 0.5},
-            on_release=lambda x: add_to_cart("c95a6a66-c9c6-4f79-b30b-dbac376793d8", product.id, 1),
-            md_bg_color=MDApp.get_running_app().theme_cls.primary_color,
-            text_color=MDApp.get_running_app().theme_cls.primary_light
-        )
-        self.add_widget(add_to_cart_button)
+
+
 
 
 MainApp().run()

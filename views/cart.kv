@@ -7,14 +7,18 @@ Screen:
         size: Window.size
 
         MDTopAppBar:
-            title: "Liste des produits"
-            left_action_items: [["arrow-left", lambda x: app.callback(x)]]
-            right_action_items: [["cart", lambda x: app.show_cart()]]
+            title: "Mon Panier"
+            left_action_items: [["arrow-left", lambda x: app.go_home()]]
 
         ScrollView:
             size_hint: (1, 1)
 
             MDList:
-                id: product_list
+                id: cart_list
                 size_hint_y: None
                 height: self.minimum_height
+
+        MDFillRoundFlatButton:
+            text: "Passer commande"
+            pos_hint: {'center_x': 0.5}
+            on_release: app.place_order()
