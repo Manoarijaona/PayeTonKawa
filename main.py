@@ -1,3 +1,5 @@
+import token
+
 from kivy.lang import Builder
 from kivy.uix.image import AsyncImage
 from kivymd.app import MDApp
@@ -7,12 +9,13 @@ from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.card import MDCard
 from kivymd.uix.label import MDLabel
 from kivymd.uix.list import TwoLineIconListItem, IconLeftWidget
+from kivymd.uix.toolbar import MDTopAppBar
 from pyzbar.pyzbar import ZBarSymbol
 from kivymd.uix.snackbar import Snackbar
 from kivy_garden.zbarcam import ZBarCam
-from kivymd.uix.button import MDFlatButton
+from kivymd.uix.button import MDFlatButton, MDFillRoundFlatButton
 
-from request import get_token_from_api_with_qrcode, token_decode, get_all_product
+from request import get_token_from_api_with_qrcode, token_decode, get_all_product, add_to_cart
 
 
 class MainLayout(BoxLayout):
@@ -89,15 +92,16 @@ class MainApp(MDApp):
         self.layout.add_widget(detail_screen)
 
 
-
 class ProductDetailScreen(BoxLayout):
-    def __init__(self, product, **kwargs):
+    def __init__(self, product, quantity=None, **kwargs):
         super().__init__(**kwargs)
 
         self.orientation = 'vertical'
         self.size_hint = (1, None)
         self.bind(minimum_height=self.setter('height'))
 
+        product_appbar = MDTopAppBar(title=product.name, pos_hint={'top': 1})
+        self.add_widget(product_appbar)
         product_name = MDLabel(text=product.name, font_style='H5', theme_text_color="Secondary")
         product_price = MDLabel(text=f"Prix : {product.price}€", theme_text_color="Secondary")
         product_description = MDLabel(text=product.description, theme_text_color="Secondary")
@@ -106,24 +110,35 @@ class ProductDetailScreen(BoxLayout):
         product_card = MDCard(orientation='vertical',
                               padding='8dp',
                               size_hint=(None, None),
-                              size=("300dp", "530dp"),
+                              size=("350dp", "450dp"),
                               pos_hint={"center_x": .5})
 
-        # Add an image
         product_image = AsyncImage(source=product.photo, size_hint=(1, 1))
         product_card.add_widget(product_image)
 
-        # Add product details
         product_card.add_widget(product_name)
         product_card.add_widget(product_price)
         product_card.add_widget(product_description)
 
-        # Add card to screen
         self.add_widget(product_card)
 
-        # Add a button to go back to the list of products
-        back_button = MDFlatButton(text="Retour", pos_hint={'center_x': 0.5}, on_release=lambda x: MDApp.get_running_app().go_home())
+        back_button = MDFillRoundFlatButton(
+            text="Retour",
+            pos_hint={'center_x': 0.5},
+            on_release=lambda x: MDApp.get_running_app().go_home(),
+            md_bg_color=MDApp.get_running_app().theme_cls.primary_color,
+            text_color=MDApp.get_running_app().theme_cls.primary_light
+        )
+
         self.add_widget(back_button)
+        add_to_cart_button = MDFillRoundFlatButton(
+            text="Ajouter au panier",
+            pos_hint={'center_x': 0.5},
+            on_release=lambda x: add_to_cart("c95a6a66-c9c6-4f79-b30b-dbac376793d8", product.id, 1),
+            md_bg_color=MDApp.get_running_app().theme_cls.primary_color,
+            text_color=MDApp.get_running_app().theme_cls.primary_light
+        )
+        self.add_widget(add_to_cart_button)
 
 
 MainApp().run()

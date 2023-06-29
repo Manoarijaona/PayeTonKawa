@@ -61,3 +61,23 @@ def get_all_product():
 
     return products_dto
 
+
+def add_to_cart(user_id: UUID,product_id: UUID, quantity: int):
+    url = f'{API_URL}/orders/create'
+    payload = {
+        'userId':  str(user_id),
+        'productId': str(product_id),
+        'quantity': quantity,
+
+    }
+    headers = {
+        'Content-Type': 'application/json',
+    }
+    response = requests.post(url, data=json.dumps(payload), headers=headers)
+    print(response.text)
+    if response.status_code == 201 or response.status_code == 200:
+        print("Produit ajouté au panier avec succès.")
+        return True
+    else:
+        print("Erreur lors de l'ajout du produit au panier.")
+        return False
